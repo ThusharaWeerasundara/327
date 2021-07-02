@@ -4,48 +4,52 @@
 #include<sys/wait.h>	// to make waitpid system call
 #include <string.h>
 
-void  parse(char *line, char **argv)
+void  parse(char *input, char **command)
 {	
 	
-     while (*line != '\0') 
+     while (*input != '\0') 
      {      
-          while (*line == ' ' || *line == '\t' || *line == '\n')
+          while (*input == ' ' || *input == '\t' || *input == '\n')
           		{	
-               		*line++ = '\0';     
+               		*input++ = '\0';     
           		}
-          *argv++ = line;          
-          while (*line != '\0' && *line != ' ' && *line != '\t' && *line != '\n') 
+          *command++ = input;          
+          while (*input != '\0' && *input != ' ' && *input != '\t' && *input != '\n') 
           {
           	
-               line++;            
+               input++;            
           }
      }
-     *argv = '\0';                
+     *command = '\0';                
 }
 
 int main()
 {	
 	int status = 0;		// store return 
 
-	char  line[1024];             /* the input line                 */
-    char  *argv[64];              /* the command line argument      */
+	char  input[1024];             /* the input input                 */
+    char  *command[64];              /* the command input argument      */
     
 
 	while(1)
 	{	
 		printf("$ ");
-		//line[0] = '\0';
+		//input[0] = 'a';
 		char destination[] = "/bin/";
 		
-		scanf("%*c");
-		scanf("%[^\n]", line);	// get a user input
-		//gets(line);
-		//fgets(line, sizeof(line), stdin);
+		//scanf("%*c");
+		//scanf("%[^\n]", input);	// get a user input
 		
-		parse(line, argv); 
+		scanf("%[^\n]%*c", input);	// get a user input
+		
+		//gets(input);
+		
+		//fgets(input, sizeof(input), stdin);
+		
+		parse(input, command); 
 		
 		
-		strcat(destination,argv[0]);
+		strcat(destination,command[0]);
 	
 
 		if( access(destination, F_OK) == 0 )
@@ -78,9 +82,9 @@ int main()
 	}
 
 	
-	printf("%s \n",*argv);
 
-	 if (execvp(*argv, argv) < 0) 
+
+	 if (execvp(*command, command) < 0) 
           {    
                printf("ERROR: System call exec failed\n");
           }
